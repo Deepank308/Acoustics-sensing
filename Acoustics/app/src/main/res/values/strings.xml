@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Acoustics</string>
+    <string name="toggle_flash">Toggle Flash</string>
+    <string name="action_settings">Settings</string>
+    <string name="scanned_data">Scanned Data</string>
+    <string name="audio_recorder">Acoustics Experiment</string>
+    <string name="start_recording">Start Recording</string>
+    <string name="stop_recording">Stop</string>
+    <string name="play_recording">Start</string>
+    <string name="stop_playing">Stop Playing</string>
+    <string name="status">Status</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="record_time">Record time (ms)</string>
+    <string name="play_time">Play time (ms)</string>
+    <string name="audio_file">Audio File</string>
+    <string name="browse">Browse</string>
+    <string name="recording_name">Response-%d-%d.aac</string>
+</resources>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<androidx.constraintlayout.widget.ConstraintLayout-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".MainActivity">
+
+    <!--Heading Text View-->
+
+    <!--This will display the status of our app when
+        we will record some audio and play that audio-->
+
+    <!--Linear Layout for adding textviews
+        in horizontal manner-->
+
+
+    <TextView
+        android:id="@+id/txthead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/audio_recorder"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="58dp" />
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/btnRecord"-->
+    <!--        android:layout_width="108dp"-->
+    <!--        android:layout_height="150dp"-->
+    <!--        android:layout_weight="1"-->
+    <!--        android:background="@color/purple_500"-->
+    <!--        android:padding="5dp"-->
+    <!--        android:text="@string/start_recording"-->
+    <!--        android:textAlignment="center"-->
+    <!--        android:textColor="@color/white"-->
+    <!--        app:drawableTopCompat="@drawable/ic_start_recording"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.297"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintVertical_bias="0.567" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/btnStopPlay"-->
+    <!--        android:layout_width="111dp"-->
+    <!--        android:layout_height="128dp"-->
+    <!--        android:layout_weight="1"-->
+    <!--        android:background="@color/purple_500"-->
+    <!--        android:lines="2"-->
+    <!--        android:padding="5dp"-->
+    <!--        android:text="@string/stop_playing"-->
+    <!--        android:textAlignment="center"-->
+    <!--        android:textColor="@color/white"-->
+    <!--        app:drawableTopCompat="@drawable/ic_pause_audio"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.773"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/btnStop"-->
+    <!--        app:layout_constraintVertical_bias="0.209" />-->
+
+    <TextView
+        android:id="@+id/idTVstatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="240dp"
+        android:text="@string/status"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.355" />
+
+    <TextView
+        android:id="@+id/btnPlay"
+        android:layout_width="115dp"
+        android:layout_height="145dp"
+        android:layout_weight="1"
+        android:background="@color/purple_500"
+        android:padding="5dp"
+        android:text="@string/play_recording"
+        android:textAlignment="center"
+        android:textColor="#212121"
+        app:drawableTopCompat="@drawable/ic_play_audio"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.261"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.813" />
+
+    <TextView
+        android:id="@+id/btnStop"
+        android:layout_width="115dp"
+        android:layout_height="145dp"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:background="@color/purple_500"
+        android:padding="5dp"
+        android:text="@string/stop_recording"
+        android:textAlignment="center"
+        android:textColor="#212121"
+        app:drawableTopCompat="@drawable/ic_stop_recording"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.712"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.817" />
+
+    <fragment
+        android:id="@+id/fragment_fileChooser"
+        android:name="com.example.acoustics.FileChooserFragment"
+        android:layout_width="334dp"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txthead"
+        app:layout_constraintVertical_bias="0.129" />
+
+    <EditText
+        android:id="@+id/editText_responseRecordTime"
+        android:layout_width="157dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:hint="@string/record_time"
+        android:importantForAutofill="no"
+        android:inputType="numberSigned"
+        android:minHeight="48dp"
+        android:textColorHint="#757575"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.846"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.348"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <EditText
+        android:id="@+id/editText_audioPlayTime"
+        android:layout_width="157dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:hint="@string/play_time"
+        android:importantForAutofill="no"
+        android:inputType="numberSigned"
+        android:minHeight="48dp"
+        android:textColorHint="#757575"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.137"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.348"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
