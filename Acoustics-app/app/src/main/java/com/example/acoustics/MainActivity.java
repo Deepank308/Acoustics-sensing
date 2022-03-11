@@ -40,6 +40,7 @@ import androidx.fragment.app.FragmentManager;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.RECORD_AUDIO;
@@ -47,21 +48,22 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Intializing all variables..
-    private TextView startTV, stopTV, playTV, stopplayTV, statusTV;
+    // Initializing all variables..
+    private TextView startTV, stopTV, playTV, stopPlayTV, statusTV;
     private EditText editTextPlayTime, editTextRecordTime;
 
-    // creating a variable for medi recorder object class.
+    // creating a variable for media recorder object class.
     private MediaRecorder mRecorder;
 
-    // creating a variable for mediaplayer class
+    // creating a variable for mediaPlayer class
     private MediaPlayer mPlayer;
 
     // string variable is created for storing a file name
     private static String mFileName = null;
-    private static String playFileName = null;
+    private static String[] playFileName = new String[3];
+    private int playFileNameIdx = 0;
     private static final String LOG_TAG = "Acoustics";
-//    private ExtAudioRecorder extAudioRecorder = ExtAudioRecorder.getInstanse(false);
+//    private ExtAudioRecorder extAudioRecorder = ExtAudioRecorder.getInstance(false);
 
     // in milli secs
     private static long ts = System.currentTimeMillis();
@@ -92,16 +94,18 @@ public class MainActivity extends AppCompatActivity {
         editTextRecordTime = findViewById(R.id.editText_responseRecordTime);
 
 //        startTV = findViewById(R.id.btnRecord);
-//        stopplayTV = findViewById(R.id.btnStopPlay);
+//        stopPlayTV = findViewById(R.id.btnStopPlay);
 
         stopTV.setBackgroundColor(getResources().getColor(R.color.gray, this.getApplicationContext().getTheme()));
         playTV.setBackgroundColor(getResources().getColor(R.color.purple_200, this.getApplicationContext().getTheme()));
-//        stopplayTV.setBackgroundColor(getResources().getColor(R.color.gray, this.getApplicationContext().getTheme()));
+//        stopPlayTV.setBackgroundColor(getResources().getColor(R.color.gray, this.getApplicationContext().getTheme()));
 
 
         stopTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playFileNameIdx = 0;
+                recordNo = 0;
                 // pause Recording method will
                 // pause the recording of audio.
                 stopPressed = true;
@@ -116,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         playTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playFileNameIdx = 0;
                 if(!editTextPlayTime.getText().toString().equals("")) {
                     long t = Long.parseLong(editTextPlayTime.getText().toString());
                     if(t > 0) playTime = t;
@@ -127,8 +132,11 @@ public class MainActivity extends AppCompatActivity {
                     else editTextRecordTime.setError("0 not Allowed");
                 }
 
-                playFileName = fragment.getPath();
-                if(playFileName.equals("")) {
+                playFileName[0] = fragment.getPath();
+                String pathToChirps = Paths.get(playFileName[0]).getParent().toString();
+                playFileName[1] = Paths.get(pathToChirps, "14000.wav").toString();
+                playFileName[2] = Paths.get(pathToChirps, "16000.wav").toString();
+                if(playFileName[0].equals("")) {
                     fragment.setEditTextError("Audio File Not specified.");
                 }
                 else {
@@ -147,14 +155,14 @@ public class MainActivity extends AppCompatActivity {
         // to record nd store the audio.
         if (CheckPermissions()) {
 
-            // setbackgroundcolor method will change
+            // setBackGroundColor method will change
             // the background color of text view.
 //            startTV.setBackgroundColor(getResources().getColor(R.color.gray, this.getApplicationContext().getTheme()));
-//            stopplayTV.setBackgroundColor(getResources().getColor(R.color.gray, this.getApplicationContext().getTheme()));
+//            stopPlayTV.setBackgroundColor(getResources().getColor(R.color.gray, this.getApplicationContext().getTheme()));
             stopTV.setBackgroundColor(getResources().getColor(R.color.purple_200, this.getApplicationContext().getTheme()));
             playTV.setBackgroundColor(getResources().getColor(R.color.gray, this.getApplicationContext().getTheme()));
 
-            mFileName = String.format(getString(R.string.recording_name), ts, recordNo);
+            mFileName = String.format(getString(R.string.recording_name), ts, playFileNameIdx, recordNo/playFileName.length);
             recordNo += 1;
 
             // we are here initializing our filename variable
@@ -166,16 +174,16 @@ public class MainActivity extends AppCompatActivity {
             values.put(MediaStore.Audio.Media.DISPLAY_NAME, mFileName);
             values.put(MediaStore.Audio.Media.RELATIVE_PATH, "Music/Acoustics Recordings/");
 
-            Uri audiouri = getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
+            Uri audioUri = getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
             ParcelFileDescriptor file = null;
 //            File file = null;
             try {
 //                file = new File(mFileName);
-                file = getContentResolver().openFileDescriptor(audiouri, "rw");
+                file = getContentResolver().openFileDescriptor(audioUri, "rw");
             } catch (Exception e) {
                 Log.e(LOG_TAG, "File not found exception. Error:" + e);
             }
-//            Log.i(MainActivity.class.getName(), audiouri.getPath());
+//            Log.i(MainActivity.class.getName(), audioUri.getPath());
 //            extAudioRecorder.setOutputFile(mFileName, file);
 //            extAudioRecorder.prepare();
 //            extAudioRecorder.start();
@@ -215,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 Log.e("TAG", "prepare() failed");
             }
-//            // start method will start the audio recording
+            // start method will start the audio recording
 //            mRecorder.start();
 
             statusTV.setText("Prepared Recorder");
@@ -262,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void startPlaying() {
         preparePlayAudio();
+        playFileNameIdx = (playFileNameIdx + 1) % playFileName.length;
         mPlayer.start();
 
         playTimer = new CountDownTimer(playTime, 1) {
@@ -297,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
         mRecorder.start();
 
         recordTimer = new CountDownTimer(recordTime, 1) {
+            int idx;
             @Override
             public void onTick(long millisUntilFinished) {
                 String dis = "Recording: " + (recordTime - millisUntilFinished) + " ms";
@@ -324,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void preparePlayAudio() {
-//        stopplayTV.setBackgroundColor(getResources().getColor(R.color.purple_200, this.getApplicationContext().getTheme()));
+//        stopPlayTV.setBackgroundColor(getResources().getColor(R.color.purple_200, this.getApplicationContext().getTheme()));
 //        startTV.setBackgroundColor(getResources().getColor(R.color.purple_200, this.getApplicationContext().getTheme()));
         playTV.setBackgroundColor(getResources().getColor(R.color.gray, this.getApplicationContext().getTheme()));
         stopTV.setBackgroundColor(getResources().getColor(R.color.purple_200, this.getApplicationContext().getTheme()));
@@ -335,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             // below method is used to set the
             // data source which will be our file name
-            mPlayer.setDataSource(playFileName);
+            mPlayer.setDataSource(playFileName[playFileNameIdx]);
 
             // below method will prepare our media player
             mPlayer.prepare();
@@ -368,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
         stopTV.setBackgroundColor(getResources().getColor(R.color.gray, this.getApplicationContext().getTheme()));
 //        startTV.setBackgroundColor(getResources().getColor(R.color.purple_200, this.getApplicationContext().getTheme()));
         playTV.setBackgroundColor(getResources().getColor(R.color.purple_200, this.getApplicationContext().getTheme()));
-//        stopplayTV.setBackgroundColor(getResources().getColor(R.color.purple_200, this.getApplicationContext().getTheme()));
+//        stopPlayTV.setBackgroundColor(getResources().getColor(R.color.purple_200, this.getApplicationContext().getTheme()));
         statusTV.setText("Recording Stopped");
     }
 
@@ -386,7 +396,7 @@ public class MainActivity extends AppCompatActivity {
         stopTV.setBackgroundColor(getResources().getColor(R.color.gray, this.getApplicationContext().getTheme()));
 //        startTV.setBackgroundColor(getResources().getColor(R.color.purple_200, this.getApplicationContext().getTheme()));
         playTV.setBackgroundColor(getResources().getColor(R.color.purple_200, this.getApplicationContext().getTheme()));
-//        stopplayTV.setBackgroundColor(getResources().getColor(R.color.gray, this.getApplicationContext().getTheme()));
+//        stopPlayTV.setBackgroundColor(getResources().getColor(R.color.gray, this.getApplicationContext().getTheme()));
         statusTV.setText("Audio Play Stopped");
     }
 }

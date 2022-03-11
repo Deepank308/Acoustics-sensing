@@ -15,5 +15,5 @@
     <string name="play_time">Play time (ms)</string>
     <string name="audio_file">Audio File</string>
     <string name="browse">Browse</string>
-    <string name="recording_name">Response-%d-%d.aac</string>
+    <string name="recording_name">Response-%d_%d-%d.aac</string>
 </resources>
